@@ -1,4 +1,4 @@
-SHARED=/var/www/blog.zipline.com/shared                                             
+SHARED=/var/www/example.com/shared
 
 ln -s $SHARED/node_modules ./ &&                                                   
 ln -s $SHARED/vendor ./ &&                                                         
