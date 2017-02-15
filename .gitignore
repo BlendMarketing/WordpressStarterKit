@@ -1,0 +1,10 @@
+**/**.swp
+**/**.swo
+.DS_Store
+.env
+vendor/*
+wp-vendor/*
+public/wp-content/*
+public/wordpress/*
+node_modules
+/themes/_skylineblog/bundle
