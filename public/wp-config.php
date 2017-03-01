@@ -11,6 +11,13 @@ define('DB_PASSWORD', getenv('DB_PASSWORD'));
 define('DB_HOST', getenv('DB_HOST'));
 
 /**
+ * uncomment for Multisite
+ */
+//define( 'WP_ALLOW_MULTISITE', true );
+//define('MULTISITE', true);
+//define('PATH_CURRENT_SITE', '/wordpress/' );
+
+/**
  * WordPress Database Table prefix.
  *
  * You can have multiple installations in one database if you give each
