@@ -1,25 +1,43 @@
-var webpack = require("webpack");
-var path = require("path");
+const webpack = require("webpack");
+const path = require("path");
+
+const themeName = "";
 
 module.exports = require("./webpack.base.js")({
     devtool: "eval",
-    loaders: [
+    rules: [
         {
             test: /\.s?css$/,
-            loaders: ["style", "css", "sass?sourceMap"]
+            use: [
+                "style-loader",
+                "css-loader",
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        plugins: function () {
+                            return [require("autoprefixer")];
+                        }
+                    }
+                },
+                {
+                    loader: "sass-loader",
+                    options:{
+                        sourceMap: true,
+                        includePaths: [path.resolve(__dirname, "themes/" + themeName + "/assets/scss")]
+                    }
+                },
+            ],
         },
     ],
     output: {
-        path: path.join(__dirname, "/bundle"),
-        filename: "bundle.js",
+        path: path.join(__dirname, "public/bundle"),
         publicPath: "http://webpack:8080/",
+        filename: "bundle.js",
         sourceMapFilename: "[file].map",
     },
     devServer: {
         publicPath: "/",
-        plugins: [],
-        devtool: "eval",
-        debug: true,
+        public: "webpack:8080",
         host: "webpack",
         port: 8080,
         watchOptions: {

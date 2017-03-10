@@ -1,0 +1,8 @@
+/**
+ * Third party dependencies. These are loaded out of node_modules. The prefixing
+ * `~` references that directory. This does cause a compatibility issue, as `~`
+ * Is a webpack sass_loader specific construct. So this will not import with
+ * other sass compilers that don't use the `~` to represent anything at all.
+ */
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "~bourbon-neat/core/neat";

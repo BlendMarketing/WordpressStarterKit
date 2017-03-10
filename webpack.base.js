@@ -8,35 +8,53 @@
  */
 const path = require("path");
 const webpack = require("webpack");
+const themeName = "";
 
 module.exports = function(options) {
 
-    var themeName = "";//Append Theme Name Here
+
     /**
      * This is intentionally slim. We ad the sass loaders in the individual config
      * files. This allows us to process them separately. In dev we load them in
      * js, in production we use the ExtractTextPlugin to save them in a new file.
      */
-    var loaders = [
+    var rules = [
         {
             test: /\.html$/,
-            loaders: ["raw"]
+            use: ["html-loader"],
+        },
+        {
+            test: /\.(jpe?g|png|gif|svg)$/i,
+            use: [
+                {
+                    loader: "file-loader",
+                    options: {
+                        hash: "sha512",
+                        digest: "hex",
+                        name: "images/[name]_[hash].[ext]",
+                    },
+                },
+                {
+                    loader: "image-webpack-loader",
+                    options: {
+                        bypassOnDebug: true,
+                        optimizationLevel: 7,
+                        interlaced: false,
+                    }
+                }
+            ]
         },
         {
             test: /\.jsx?$/,
             exclude: /(node_modules)/,
-            loader: "babel",
-            query: {
-                plugins: ["transform-runtime"],
-                presets: ["es2015"],
-            },
+            use: "babel-loader",
         },
     ];
 
     // This is the production output. It can be overridden fron extending
     // configurations.
     var output = {
-        path: path.join(__dirname, "themes/" + themeName + "/bundle"),
+        path: path.join(__dirname, "themes/"+themeName+"/bundle"),
         publicPath: "/wp-content/themes/" + themeName + "/bundle/",
         filename: "[hash].js",
         sourceMapFilename: "[file].map",
@@ -48,8 +66,8 @@ module.exports = function(options) {
     // Merge in option.plugins
     plugins = options.plugins ? plugins.concat(options.plugins) : plugins;
 
-    // Merge in option.loaders
-    loaders = options.loaders ? loaders.concat(options.loaders) : loaders;
+    // Merge in option.rules
+    rules = options.rules ? rules.concat(options.rules) : rules;
 
     // Override output if we need to.
     output = options.output ? options.output : output;
@@ -57,27 +75,23 @@ module.exports = function(options) {
     return {
         cache: true,
         entry: {
-            " + themeName + ": path.join(__dirname, "assets/" + themeName + "/js/entrypoints/app.js"),
+            [themeName]: path.join(__dirname, "themes/" + themeName + "/assets/js/entrypoints/app.js"),
         },
         devtool: options.devtool,
         output: output,
-        sassLoader: {
-            includePaths: [path.resolve(__dirname, "./assets/" + themeName + "/scss")]
-        },
         module: {
-            loaders: loaders,
+            rules: rules,
         },
         resolve: {
-            modulesDirectories: [
+            modules: [
                 "node_modules",
-                "assets/" + themeName + "/js",
-                "assets/" + themeName + "/scss",
-                "assets/" + themeName + "/icons",
+                "themes/"+themeName+"/assets/js",
+                "themes/"+themeName+"/assets/scss",
+                "themes/"+themeName+"/assets/icons",
             ],
         },
         plugins: plugins,
         devServer: options.devServer ? options.devServer : {},
     };
-
 };
 

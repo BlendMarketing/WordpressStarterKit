@@ -3,13 +3,38 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
-const themeName = "";//ThemeName
+const themeName = "";
+
+const extractSass = new ExtractTextPlugin({
+    filename: "[contenthash].css",
+});
 
 module.exports = require("./webpack.base.js")({
-    loaders: [
+    rules: [
         {
             test: /\.s?css$/,
-            loader: ExtractTextPlugin.extract("style", ["raw", "sass"]),
+            use: extractSass.extract({
+                fallback: "style-loader",
+                use: [
+                    {
+                        loader: "css-loader"
+                    },
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            plugins: function () {
+                                return [require("autoprefixer")];
+                            }
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options:{
+                            includePaths: [path.resolve(__dirname, "themes/" + themeName + "/assets/scss")]
+                        },
+                    }
+                ],
+            }),
         }
     ],
 
@@ -30,22 +55,16 @@ module.exports = require("./webpack.base.js")({
                 "NODE_ENV": JSON.stringify("production")
             }
         }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
+        new webpack.optimize.UglifyJsPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "public/wp-content/themes/" + themeName + "/header.php"),
             filename: path.join(__dirname, "public/wp-content/themes/" + themeName + "/header.php"),
-            chunks: ['" + themeName + "'],
+            chunks: [themeName],
             inject: "head",
         }),
         new ScriptExtHtmlWebpackPlugin({
             defaultAttribute: 'defer'
         }),
-
-        new ExtractTextPlugin("[contentHash].css"),
+        extractSass,
     ],
 });
