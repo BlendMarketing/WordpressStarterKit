@@ -15,7 +15,13 @@ define("DB_HOST", getenv("DB_HOST"));
  */
 //define( "WP_ALLOW_MULTISITE", true );
 //define("MULTISITE", true);
-//define("PATH_CURRENT_SITE", "/wordpress/" );
+// set this in your .env
+//define('DOMAIN_CURRENT_SITE', getenv('DOMAIN_CURRENT_SITE') );
+//define("PATH_CURRENT_SITE", "/" );
+//define('SITE_ID_CURRENT_SITE', 1);
+//define('BLOGID_CURRENT_SITE', '1' );
+//define( 'WP_NETWORK_URL',  DOMAIN_CURRENT_SITE . '/wordpress');
+
 
 /**
  * WordPress Database Table prefix.
