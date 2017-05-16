@@ -31,6 +31,15 @@ define("DB_HOST", getenv("DB_HOST"));
  */
 $table_prefix  = getenv("DB_PREFIX");
 
+/**
+ * uncomment for single site with multiple domains 
+ * (yeah, don't uncomment this unless you really know what you're doing)
+ *
+ */
+//define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST']);
+//define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST']);
+
+
 /** Absolute path to the WordPress directory. */
 if ( !defined("ABSPATH") )
     define("ABSPATH", dirname(__FILE__) . "/");
